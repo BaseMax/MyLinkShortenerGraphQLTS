@@ -33,6 +33,122 @@ To set up the project locally, follow these steps:
 - The API will be available at `http://localhost:3000`.
 - Feel free to customize the project according to your specific requirements and design preferences.
 
+## Models
+
+```typescript
+// User model
+interface User {
+  id: string;
+  email: string;
+  password: string;
+  name: string;
+  avatar: string;
+  createdAt: Date;
+}
+
+// Link model
+interface Link {
+  id: string;
+  userId: string;
+  alias: string;
+  destinationUrl: string;
+  shortUrl: string;
+  expirationDate: Date | null;
+  createdAt: Date;
+}
+
+// Visit model
+interface Visit {
+  id: string;
+  linkId: string;
+  referrer: string;
+  userAgent: string;
+  ipAddress: string;
+  timestamp: Date;
+}
+
+// Search query input
+interface SearchInput {
+  query: string;
+}
+
+// GetPopularLinks query input
+interface GetPopularLinksInput {
+  limit: number;
+}
+
+// GetTopReferrers query input
+interface GetTopReferrersInput {
+  linkId: string;
+  limit: number;
+}
+
+// UpdateLinkAlias mutation input
+interface UpdateLinkAliasInput {
+  id: string;
+  newAlias: string;
+}
+
+// ToggleLinkActivation mutation input
+interface ToggleLinkActivationInput {
+  id: string;
+  active: boolean;
+}
+
+// UpdateUserProfile mutation input
+interface UpdateUserProfileInput {
+  name: string;
+  avatar: string;
+}
+
+// GenerateQRCode mutation input
+interface GenerateQRCodeInput {
+  id: string;
+}
+
+// GetLinkByShortenedUrl query input
+interface GetLinkByShortenedUrlInput {
+  shortUrl: string;
+}
+
+// GetVisitsByLink query input
+interface GetVisitsByLinkInput {
+  id: string;
+}
+
+// UpdateLinkDestinationUrl mutation input
+interface UpdateLinkDestinationUrlInput {
+  id: string;
+  newUrl: string;
+}
+
+// CreateCustomShortenedLink mutation input
+interface CreateCustomShortenedLinkInput {
+  url: string;
+  alias: string;
+  expirationDate?: Date;
+}
+
+// EditLinkExpiration mutation input
+interface EditLinkExpirationInput {
+  id: string;
+  expirationDate: Date;
+}
+
+// TrackLinkVisit mutation input
+interface TrackLinkVisitInput {
+  id: string;
+  referrer: string;
+  userAgent: string;
+  ipAddress: string;
+}
+
+// DeleteUserAccount mutation input
+interface DeleteUserAccountInput {
+  // No additional input required
+}
+```
+
 ## Queries
 
 **Get All Links**
