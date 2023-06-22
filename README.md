@@ -452,6 +452,227 @@ query {
 }
 ```
 
+**Register User**
+
+```graphql
+mutation {
+  registerUser(email: "example@email.com", password: "password") {
+    id
+    email
+    token
+  }
+}
+```
+
+**Login**
+
+```graphql
+mutation {
+  login(email: "example@email.com", password: "password") {
+    id
+    email
+    token
+  }
+}
+```
+
+**Forgot Password**
+
+```graphql
+mutation {
+  forgotPassword(email: "example@email.com") {
+    message
+  }
+}
+```
+
+**Reset Password**
+
+```graphql
+mutation {
+  resetPassword(resetToken: "your-reset-token", newPassword: "newpassword") {
+    message
+  }
+}
+```
+
+**Shorten Link**
+
+```graphql
+mutation {
+  shortenLink(url: "https://example.com", expirationDate: "2023-12-31T23:59:59Z") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Update Link**
+
+```graphql
+mutation {
+  updateLink(id: "your-link-id", expirationDate: "2023-12-31T23:59:59Z") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Delete Link**
+
+```graphql
+mutation {
+  deleteLink(id: "your-link-id") {
+    message
+  }
+}
+```
+
+**Update Link Destination URL**
+
+```graphql
+mutation {
+  updateLinkDestinationUrl(id: "your-link-id", newUrl: "https://newexample.com") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Create Custom Shortened Link**
+
+```graphql
+mutation {
+  createCustomShortenedLink(url: "https://example.com", alias: "custom-alias", expirationDate: "2023-12-31T23:59:59Z") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Edit Link Expiration**
+
+```graphql
+mutation {
+  editLinkExpiration(id: "your-link-id", expirationDate: "2023-12-31T23:59:59Z") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Track Link Visit**
+```graphql
+mutation {
+  trackLinkVisit(id: "your-link-id", referrer: "https://referrer.com", userAgent: "Mozilla/5.0", ipAddress: "127.0.0.1") {
+    id
+    referrer
+    userAgent
+    ipAddress
+    timestamp
+  }
+}
+```
+
+**Delete User Account**
+
+```graphql
+mutation {
+  deleteUserAccount {
+    message
+  }
+}
+```
+
+**Update Link Alias**
+
+```graphql
+mutation {
+  updateLinkAlias(id: "your-link-id", newAlias: "new-alias") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Toggle Link Activation**
+
+```graphql
+mutation {
+  toggleLinkActivation(id: "your-link-id", active: true) {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+    active
+  }
+}
+```
+
+**Update User Profile**
+
+```graphql
+mutation {
+  updateUserProfile(name: "John Doe", avatar: "https://example.com/avatar.png") {
+    id
+    email
+    name
+    avatar
+  }
+}
+```
+
+**Generate QR Code**
+
+```graphql
+mutation {
+  generateQRCode(id: "your-link-id") {
+    qrCodeImageURL
+  }
+}
+```
+
+**Get User Profile**
+
+```graphql
+query {
+  getUserProfile {
+    id
+    email
+    name
+    avatar
+  }
+}
+```
+
+Please note that you may need to adjust the input values or fields based on your application's requirements.
+
 Copyright 2023, Max Base
 
 -------------
