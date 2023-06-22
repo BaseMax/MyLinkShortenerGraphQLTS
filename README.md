@@ -279,7 +279,6 @@ interface DeleteUserAccountInput {
 - Arguments: None
 - Response: Success message
 
-
 **Update Link Alias**
 
 - Description: Update the alias of a shortened link.
@@ -311,6 +310,147 @@ interface DeleteUserAccountInput {
 - Response: User profile details
 
 These queries and mutations should cover the basic functionality required for a link shortener API. Feel free to modify or expand upon them according to your specific project requirements.
+
+## GraphQL Examples
+
+**Get All Links**
+
+```graphql
+query {
+  getAllLinks {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Get Link by ID**
+
+```graphql
+query {
+  getLink(id: "your-link-id") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Get Link Stats**
+
+```graphql
+query {
+  getLinkStats(id: "your-link-id") {
+    link {
+      id
+      alias
+      destinationUrl
+      shortUrl
+      expirationDate
+      createdAt
+    }
+    visits {
+      id
+      referrer
+      userAgent
+      ipAddress
+      timestamp
+    }
+    totalVisits
+  }
+}
+```
+
+**Get Link by Shortened URL**
+
+```graphql
+query {
+  getLinkByShortenedUrl(shortUrl: "your-shortened-url") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Get User Links**
+
+```graphql
+query {
+  getUserLinks {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Get Link Visits**
+
+```graphql
+query {
+  getLinkVisits(id: "your-link-id") {
+    id
+    referrer
+    userAgent
+    ipAddress
+    timestamp
+  }
+}
+```
+
+**Search Links**
+```graphql
+query {
+  searchLinks(query: "your-search-query") {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Get Popular Links**
+
+```graphql
+query {
+  getPopularLinks(limit: 10) {
+    id
+    alias
+    destinationUrl
+    shortUrl
+    expirationDate
+    createdAt
+  }
+}
+```
+
+**Get Top Referrers**
+
+```graphql
+query {
+  getTopReferrers(id: "your-link-id", limit: 5) {
+    referrer
+    visitCount
+  }
+}
+```
 
 Copyright 2023, Max Base
 
