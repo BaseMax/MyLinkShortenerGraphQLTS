@@ -71,6 +71,24 @@ To set up the project locally, follow these steps:
 - Arguments: id (Link ID)
 -Response: List of visits and their details for the link
 
+**Search Links**
+
+- Description: Search for shortened links based on specific criteria, such as keywords in the destination URL or link alias.
+- Arguments: query (Search query)
+- Response: List of matching shortened links
+
+**Get Popular Links**
+
+- Description: Retrieve a list of popular or most visited shortened links.
+- Arguments: limit (Number of links to retrieve)
+- Response: List of popular shortened links
+
+**Get Top Referrers**
+
+- Description: Retrieve the top referrers for a specific shortened link, indicating the sources from which the link was accessed.
+- Arguments: id (Link ID), limit (Number of top referrers to retrieve)
+- Response: List of top referrers for the link
+
 ## Mutations
 
 **Register User**
@@ -144,6 +162,37 @@ To set up the project locally, follow these steps:
 - Description: Delete the authenticated user's account.
 - Arguments: None
 - Response: Success message
+
+
+**Update Link Alias**
+
+- Description: Update the alias of a shortened link.
+- Arguments: id (Link ID), newAlias (New alias)
+- Response: Updated shortened link details
+
+**Toggle Link Activation**
+
+- Description: Activate or deactivate a shortened link to make it accessible or temporarily unavailable.
+- Arguments: id (Link ID), active (Boolean indicating activation status)
+- Response: Updated shortened link details
+
+**Update User Profile**
+
+- Description: Update the user's profile information, such as name, avatar, or any other relevant details.
+- Arguments: name (User's name), avatar (URL of the user's avatar)
+- Response: Updated user profile details
+
+**Generate QR Code**
+
+- Description: Generate a QR code for a specific shortened link, allowing users to easily scan and access the link using their mobile devices.
+- Arguments: id (Link ID)
+- Response: Generated QR code image data or URL
+
+**Get User Profile**
+
+- Description: Retrieve the profile information of the authenticated user.
+- Arguments: None
+- Response: User profile details
 
 These queries and mutations should cover the basic functionality required for a link shortener API. Feel free to modify or expand upon them according to your specific project requirements.
 
