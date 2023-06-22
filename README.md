@@ -1,6 +1,42 @@
-# MyLinkShortenerGraphQLTS
+# Link Shortener - Back-end GraphQL API (TypeScript)
 
-My Link-Shortener GraphQL TypeScript
+This project is a back-end GraphQL-based API, implemented in TypeScript, for a link shortener site. The API allows users to shorten long URLs and manage their shortened links. It provides features such as instant link shortening, link expiration, monitoring and tracking of visits and requests, link editing, and account registration/login.
+
+## Features
+
+- **Instant Link Shortening:** Users can shorten long URLs quickly within 3 seconds.
+- **Link Expiration:** Users can specify the desired lifespan of their shortened links, including options such as one day, one week, one month, six months, or indefinite duration. They can also set a specific date/time for link expiration, considering the UTC time zone.
+- **Account Registration/Login:** Users can create an account or log in to their existing account. This allows them to access additional features and view a list of their created links.
+- **Forgot Password:** Users can request a password reset if they forget their password. The "Forgot Password" page allows them to initiate the password recovery process.
+- **Management Panel:** Authenticated users have access to a management panel where they can view statistics and charts related to their links. They can also see a list of all their created links, with options to edit or delete each link. Deleting a link prompts a modal confirmation dialog, while editing a link opens a modal with options to update the expiration date/time or change the destination URL.
+
+## Technologies Used
+
+The back-end API is built using the following technologies:
+
+Node.js: A JavaScript runtime environment for executing server-side code.
+TypeScript: A statically-typed superset of JavaScript that compiles to plain JavaScript code.
+GraphQL: A query language for APIs that enables efficient data retrieval and manipulation.
+Express: A web application framework for Node.js that simplifies API development.
+MongoDB: A NoSQL database used to store user accounts, links, and related data.
+JWT: JSON Web Tokens are used for authentication and authorization purposes.
+Apollo Server: A GraphQL server implementation that integrates with Express and provides essential features for handling GraphQL requests and responses.
+
+## Installation
+
+To set up the project locally, follow these steps:
+
+- Clone the repository: `git clone https://github.com/BaseMax/MyLinkShortenerGraphQLTS`
+- Install the dependencies: `npm install`
+- Set up the environment variables (database connection details, JWT secret, etc.) by creating a `.env` file.
+- Start the development server: `npm run dev`
+- The API will be available at `http://localhost:3000`.
+- Feel free to customize the project according to your specific requirements and design preferences.
+
+
+Copyright 2023, Max Base
+
+-------------
 
 اولین پروژه: سیستم و سایت کوتاه کننده لینک
 
