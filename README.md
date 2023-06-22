@@ -53,6 +53,24 @@ To set up the project locally, follow these steps:
 - Arguments: id (Link ID)
 - Response: Link statistics and visit data
 
+**Get Link by Shortened URL**
+
+- Description: Retrieve a specific shortened link by its shortened URL.
+- Arguments: shortUrl (Shortened URL)
+- Response: Shortened link details
+
+**Get User Links**
+
+- Description: Retrieve a list of shortened links created by the authenticated user.
+- Arguments: None
+- Response: List of shortened links created by the user
+
+**Get Link Visits**
+
+- Description: Retrieve the visit history for a specific shortened link.
+- Arguments: id (Link ID)
+-Response: List of visits and their details for the link
+
 ## Mutations
 
 **Register User**
@@ -95,6 +113,36 @@ To set up the project locally, follow these steps:
 
 - Description: Delete a shortened link.
 - Arguments: id (Link ID)
+- Response: Success message
+
+**Update Link Destination URL**
+
+- Description: Update the destination URL of a shortened link.
+- Arguments: id (Link ID), newUrl (New destination URL)
+- Response: Updated shortened link details
+
+**Create Custom Shortened Link**
+
+- Description: Create a shortened link with a custom alias.
+- Arguments: url, alias (Custom alias), expirationDate (optional)
+- Response: Shortened link details
+
+**Edit Link Expiration**
+
+- Description: Edit the expiration settings of a shortened link.
+- Arguments: id (Link ID), expirationDate (New expiration date)
+- Response: Updated shortened link details
+
+**Track Link Visit**
+
+- Description: Track a visit to a shortened link.
+- Arguments: id (Link ID), referrer (Referring URL), userAgent (User agent string), ipAddress (IP address)
+- Response: Visit details
+
+**Delete User Account**
+
+- Description: Delete the authenticated user's account.
+- Arguments: None
 - Response: Success message
 
 These queries and mutations should cover the basic functionality required for a link shortener API. Feel free to modify or expand upon them according to your specific project requirements.
