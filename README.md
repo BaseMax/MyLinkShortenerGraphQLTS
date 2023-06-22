@@ -33,6 +33,71 @@ To set up the project locally, follow these steps:
 - The API will be available at `http://localhost:3000`.
 - Feel free to customize the project according to your specific requirements and design preferences.
 
+## Queries
+
+**Get All Links**
+
+- Description: Retrieve a list of all shortened links created by the authenticated user.
+- Arguments: None
+- Response: List of shortened links
+
+**Get Link by ID**
+
+- Description: Retrieve a specific shortened link by its ID.
+- Arguments: id (Link ID)
+- Response: Shortened link details
+
+**Get Link Stats**
+
+- Description: Retrieve statistics and visit data for a specific shortened link.
+- Arguments: id (Link ID)
+- Response: Link statistics and visit data
+
+## Mutations
+
+**Register User**
+
+- Description: Create a new user account.
+- Arguments: email, password
+- Response: User details and authentication token
+
+**Login**
+
+- Description: Log in to an existing user account.
+- Arguments: email, password
+- Response: User details and authentication token
+
+**Forgot Password**
+
+- Description: Initiate the password recovery process by sending a password reset email to the user.
+- Arguments: email
+- Response: Success message
+
+**Reset Password**
+
+- Description: Reset the user's password with a new password after following the password reset link.
+- Arguments: resetToken, newPassword
+- Response: Success message
+
+**Shorten Link**
+
+- Description: Create a shortened link.
+- Arguments: url, expirationDate (optional)
+- Response: Shortened link details
+
+**Update Link**
+
+- Description: Update the expiration date of a shortened link.
+- Arguments: id (Link ID), expirationDate
+- Response: Updated shortened link details
+
+**Delete Link**
+
+- Description: Delete a shortened link.
+- Arguments: id (Link ID)
+- Response: Success message
+
+These queries and mutations should cover the basic functionality required for a link shortener API. Feel free to modify or expand upon them according to your specific project requirements.
 
 Copyright 2023, Max Base
 
