@@ -1,0 +1,24 @@
+type Shortner {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateShortnerInput {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateShortnerInput {
+  id: Int!
+}
+
+type Query {
+  shortner: [Shortner]!
+  shortner(id: Int!): Shortner
+}
+
+type Mutation {
+  createShortner(createShortnerInput: CreateShortnerInput!): Shortner!
+  updateShortner(updateShortnerInput: UpdateShortnerInput!): Shortner!
+  removeShortner(id: Int!): Shortner
+}
