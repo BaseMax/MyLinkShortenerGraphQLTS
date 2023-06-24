@@ -1,15 +1,15 @@
-import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
-import { Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
-import { MongooseModule } from "@nestjs/mongoose";
-import { config } from "dotenv";
-import { GraphQLError, GraphQLFormattedError } from "graphql";
 import { resolve } from "path";
-import { AuthenticationModule } from "./components/authentication/authentication.module";
+import { config } from "dotenv";
 
 config({
   path: resolve(__dirname, "../.env"),
 });
+import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { Module } from "@nestjs/common";
+import { GraphQLModule } from "@nestjs/graphql";
+import { MongooseModule } from "@nestjs/mongoose";
+import { GraphQLError, GraphQLFormattedError } from "graphql";
+import { AuthenticationModule } from "./components/authentication/authentication.module";
 
 @Module({
   imports: [

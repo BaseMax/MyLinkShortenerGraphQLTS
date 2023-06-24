@@ -7,7 +7,7 @@ export class AuthenticationResolver {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Mutation("register")
-  public async register(@Args("registerInput") ri: RegisterInput) {
-    return await this.register(ri);
+  public async register(@Args("ri") ri: RegisterInput) {
+    return await this.authenticationService.register(ri);
   }
 }

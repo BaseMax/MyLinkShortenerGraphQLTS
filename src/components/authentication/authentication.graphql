@@ -1,8 +1,16 @@
 # types
 type Authentication {
+  newUser: newUser
+  accessToken: String
+  message: String!
+  created: Boolean!
+}
+
+type newUser {
   id: ID!
   email: String!
-  accessToken: String!
+  name: String!
+  avatar: String!
   createdAt: String!
 }
 
@@ -20,5 +28,5 @@ type Query {
 }
 
 type Mutation {
-  register(r: registerInput!): Authentication
+  register(ri: registerInput!): Authentication
 }

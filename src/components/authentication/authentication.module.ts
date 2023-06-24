@@ -3,7 +3,7 @@ import { AuthenticationService } from "./authentication.service";
 import { AuthenticationResolver } from "./authentication.resolver";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
-import userSchema, { User } from "src/models/user.model";
+import userSchema, { User } from "../../models/user.model";
 
 @Module({
   imports: [
