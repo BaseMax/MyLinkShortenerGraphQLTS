@@ -9,6 +9,7 @@ import { LoginInput } from "./dto/login.input";
 import { createTransport, Transporter, SentMessageInfo } from "nodemailer";
 import { ExpireCode } from "../../models/expireCode.model";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { ResetPasswordInput } from "./dto/resetPass.input";
 
 @Injectable()
 export class AuthenticationService {
@@ -103,6 +104,30 @@ export class AuthenticationService {
       message: "email sended to you",
       accepted: true,
       sendTo: accepted[0],
+    };
+  }
+
+  public async resetPassword(rp: ResetPasswordInput) {
+    const cx = await this.expirecodeModel.findOne({ code: rp.code });
+
+    if ((cx.code || 0) !== rp.code || !cx)
+      return {
+        changed: false,
+        accepted: false,
+        message: "code is expired or not correct",
+      };
+
+    rp.password = this.hashT(rp.password);
+
+    const { modifiedCount } = await this.userModel.updateOne(
+      { email: cx.email },
+      { $set: { password: rp.password } },
+    );
+
+    return {
+      changed: modifiedCount >= 1 ? true : false,
+      accepted: true,
+      message: "your password changed",
     };
   }
 }

@@ -20,11 +20,13 @@ describe("AppController (e2e)", () => {
 
   // models
   let userModel: Model<any>;
+  let expirecodeModel: Model<any>;
 
   beforeAll(async () => {
     await connect("mongodb://127.0.0.1:27017/urlshortner");
 
     userModel = model("users", new Schema({}, { strict: false }));
+    expirecodeModel = model("expirecodes", new Schema({}, { strict: false }));
   });
 
   beforeEach(async () => {
@@ -124,7 +126,33 @@ describe("AppController (e2e)", () => {
       expect(body.data.forgotPassword).toHaveProperty("sendTo");
       expect(body.data.forgotPassword.accepted).toBeTruthy();
       expect(typeof body.data.forgotPassword.sendTo).toBe("string");
+    });
 
+    it("should change password", async () => {
+      const ex = await expirecodeModel.findOne({ email: authUser.email });
+
+      const mutation = `
+      mutation auth {
+        resetPassword(rp: {
+          code: ${ex.code}
+          password: "test2"
+        }) {
+          accepted
+          changed
+          message
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query: mutation });
+
+      expect(status).toBe(200);
+      expect(body.data.resetPassword).toHaveProperty("accepted");
+      expect(body.data.resetPassword.accepted).toBeTruthy();
+      expect(body.data.resetPassword).toHaveProperty("changed");
+      expect(body.data.resetPassword.changed).toBeTruthy();
       await userModel.deleteOne({ email: authUser.email });
     });
   });

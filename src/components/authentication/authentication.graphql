@@ -20,6 +20,12 @@ type newUser {
   createdAt: String!
 }
 
+type ResetPasswordRes {
+  changed: Boolean!
+  accepted: Boolean!
+  message: String!
+}
+
 # inputs
 input registerInput {
   email: String!
@@ -33,6 +39,10 @@ input loginInput {
   password: String!
 }
 
+input ResetPasswordInput {
+  code: Int!
+  password: String!
+}
 # query
 type Query {
   _null: String!
@@ -42,4 +52,5 @@ type Mutation {
   register(ri: registerInput!): Authentication!
   login(ri: loginInput!): Authentication!
   forgotPassword(email: String!): ForgotPasswordRes!
+  resetPassword(rp: ResetPasswordInput): ResetPasswordRes!
 }
