@@ -1,24 +1,24 @@
+# types
 type Authentication {
-  # Example field (placeholder)
-  exampleField: Int
+  id: ID!
+  email: String!
+  accessToken: String!
+  createdAt: String!
 }
 
-input CreateAuthenticationInput {
-  # Example field (placeholder)
-  exampleField: Int
+# inputs
+input registerInput {
+  email: String!
+  password: String!
+  name: String!
+  avatar: String!
 }
 
-input UpdateAuthenticationInput {
-  id: Int!
-}
-
+# query
 type Query {
-  authentication: [Authentication]!
-  authentication(id: Int!): Authentication
+  _null: String!
 }
 
 type Mutation {
-  createAuthentication(createAuthenticationInput: CreateAuthenticationInput!): Authentication!
-  updateAuthentication(updateAuthenticationInput: UpdateAuthenticationInput!): Authentication!
-  removeAuthentication(id: Int!): Authentication
+  register(r: registerInput!): Authentication
 }

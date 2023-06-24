@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthenticationInput } from './dto/create-authentication.input';
-import { UpdateAuthenticationInput } from './dto/update-authentication.input';
-
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { User } from "../../models/user.model";
+import { RegisterInput } from "./dto/register.input";
+import { hashSync, compareSync } from "bcrypt";
+import { JwtService } from "@nestjs/jwt";
 @Injectable()
 export class AuthenticationService {
-  create(createAuthenticationInput: CreateAuthenticationInput) {
-    return 'This action adds a new authentication';
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  private hashT(i: string) {
+    return hashSync(i, 8);
   }
 
-  findAll() {
-    return `This action returns all authentication`;
+  private compareHash(h: string, i: string) {
+    return compareSync(h, i);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} authentication`;
-  }
+  public async register(ri: RegisterInput) {
+    const userExists = await this.userModel.findOne({ email: ri.email });
+    if (userExists)
+      return {
+        message: "user exists with this email",
+        created: false,
+      };
 
-  update(id: number, updateAuthenticationInput: UpdateAuthenticationInput) {
-    return `This action updates a #${id} authentication`;
-  }
+    ri.password = this.hashT(ri.password);
 
-  remove(id: number) {
-    return `This action removes a #${id} authentication`;
+    const newUser = await this.userModel.create(ri);
+
+    const accessToken = this.jwtService.sign({ id: newUser._id });
+
+    return {
+      accessToken,
+      newUser,
+      message: "user created successfuly",
+      created: true,
+    };
   }
 }
