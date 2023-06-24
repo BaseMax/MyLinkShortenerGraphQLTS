@@ -101,6 +101,29 @@ describe("AppController (e2e)", () => {
       expect(body.data.login).toHaveProperty("accessToken");
       expect(body.data.login).toHaveProperty("accepted");
       expect(body.data.login.accepted).toBeTruthy();
+    });
+
+    it("should send email for password reset", async () => {
+      const mutation = `
+      mutation auth {
+        forgotPassword(email: "${authUser.email}") {
+          accepted
+            message
+            sendTo
+        }
+      }
+      
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query: mutation });
+
+      expect(status).toBe(200);
+      expect(body.data.forgotPassword).toHaveProperty("accepted");
+      expect(body.data.forgotPassword).toHaveProperty("message");
+      expect(body.data.forgotPassword).toHaveProperty("sendTo");
+      expect(body.data.forgotPassword.accepted).toBeTruthy();
+      expect(typeof body.data.forgotPassword.sendTo).toBe("string");
 
       await userModel.deleteOne({ email: authUser.email });
     });

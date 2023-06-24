@@ -16,4 +16,9 @@ export class AuthenticationResolver {
   public async login(@Args("ri") ri: LoginInput) {
     return await this.authenticationService.login(ri);
   }
+
+  @Mutation("forgotPassword")
+  public async forgotPassword(@Args("email") email: string) {
+    return await this.authenticationService.forgotPassword(email);
+  }
 }

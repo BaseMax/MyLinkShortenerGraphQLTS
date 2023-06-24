@@ -4,6 +4,7 @@ import { AuthenticationResolver } from "./authentication.resolver";
 import { JwtModule } from "@nestjs/jwt";
 import { MongooseModule } from "@nestjs/mongoose";
 import userSchema, { User } from "../../models/user.model";
+import expireCodeSchema, { ExpireCode } from "../../models/expireCode.model";
 
 @Module({
   imports: [
@@ -16,6 +17,10 @@ import userSchema, { User } from "../../models/user.model";
       {
         name: User.name,
         schema: userSchema,
+      },
+      {
+        name: ExpireCode.name,
+        schema: expireCodeSchema,
       },
     ]),
   ],
