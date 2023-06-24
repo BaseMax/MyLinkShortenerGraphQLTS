@@ -5,6 +5,7 @@ import { User } from "../../models/user.model";
 import { RegisterInput } from "./dto/register.input";
 import { hashSync, compareSync } from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
+import { LoginInput } from "./dto/login.input";
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -16,8 +17,8 @@ export class AuthenticationService {
     return hashSync(i, 8);
   }
 
-  private compareHash(h: string, i: string) {
-    return compareSync(h, i);
+  private compareHash(i: string, h: string) {
+    return compareSync(i, h);
   }
 
   public async register(ri: RegisterInput) {
@@ -36,9 +37,29 @@ export class AuthenticationService {
 
     return {
       accessToken,
-      newUser,
+      user: newUser,
       message: "user created successfuly",
-      created: true,
+      accepted: true,
+    };
+  }
+
+  public async login({ email, password }: LoginInput) {
+    const user = await this.userModel.findOne({ email });
+
+    const ispasswordCorrect = this.compareHash(password, user.password || "");
+    if (!user || !ispasswordCorrect)
+      return {
+        user: null,
+        message: "user not found",
+        accepted: false,
+      };
+
+    const accessToken = this.jwtService.sign({ id: user._id });
+    return {
+      accessToken,
+      user,
+      message: "login successful",
+      accepted: true,
     };
   }
 }

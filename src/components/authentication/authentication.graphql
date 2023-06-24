@@ -1,9 +1,9 @@
 # types
 type Authentication {
-  newUser: newUser
+  user: newUser
   accessToken: String
   message: String!
-  created: Boolean!
+  accepted: Boolean!
 }
 
 type newUser {
@@ -22,11 +22,17 @@ input registerInput {
   avatar: String!
 }
 
+input loginInput {
+  email: String!
+  password: String!
+}
+
 # query
 type Query {
   _null: String!
 }
 
 type Mutation {
-  register(ri: registerInput!): Authentication
+  register(ri: registerInput!): Authentication!
+  login(ri: loginInput!): Authentication!
 }

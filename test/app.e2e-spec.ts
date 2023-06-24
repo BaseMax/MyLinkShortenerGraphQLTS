@@ -21,9 +21,13 @@ describe("AppController (e2e)", () => {
   // models
   let userModel: Model<any>;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     await connect("mongodb://127.0.0.1:27017/urlshortner");
 
+    userModel = model("users", new Schema({}, { strict: false }));
+  });
+
+  beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -31,40 +35,74 @@ describe("AppController (e2e)", () => {
     app = moduleFixture.createNestApplication();
 
     await app.init();
-
-    userModel = model("users", new Schema({}, { strict: false }));
-    await userModel.deleteMany({});
   });
 
   describe("authentication", () => {
+    const authUser = {
+      email: "authUser@gmail.com",
+      password: "authUser",
+      name: "authUser",
+      avatar: "avatar",
+    };
     it("should register successfuly", async () => {
       const mutation = `
       mutation auth($input: registerInput!) {
         register(ri: $input) {
          accessToken
-         created
-         newUser {
+         accepted
+         user {
             id
           }
         }
       }
       `;
       const input = {
-        input: defaultUser,
+        input: authUser,
       };
 
       const { status, body } = await request(app.getHttpServer())
         .post("/graphql")
         .send({ query: mutation, variables: input });
 
-      accessTokens.defaultUser = body.data.register.accessToken;
+      expect(status).toBe(200);
+      expect(body.data.register).toHaveProperty("user");
+      expect(body.data.register.user).toHaveProperty("id");
+      expect(body.data.register).toHaveProperty("accessToken");
+      expect(body.data.register).toHaveProperty("accepted");
+      expect(body.data.register.accepted).toBeTruthy();
+    });
+
+    it("should login successfuly", async () => {
+      const mutation = `
+      mutation auth($input: loginInput!) {
+        login(ri: $input) {
+         accessToken
+         accepted
+         user {
+            id
+          }
+        }
+      }
+      `;
+      const input = {
+        input: {
+          email: authUser.email,
+          password: authUser.password,
+        },
+      };
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query: mutation, variables: input });
 
       expect(status).toBe(200);
-      expect(body.data.register).toHaveProperty("newUser");
-      expect(body.data.register.newUser).toHaveProperty("id");
-      expect(body.data.register).toHaveProperty("accessToken");
-      expect(body.data.register).toHaveProperty("created");
-      expect(body.data.register.created).toBeTruthy();
+      expect(body.data.login).toHaveProperty("user");
+      expect(body.data.login.user).toHaveProperty("id");
+      expect(body.data.login).toHaveProperty("accessToken");
+      expect(body.data.login).toHaveProperty("accepted");
+      expect(body.data.login.accepted).toBeTruthy();
+
+      await userModel.deleteOne({ email: authUser.email });
     });
   });
 });
