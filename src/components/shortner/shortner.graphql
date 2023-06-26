@@ -1,9 +1,9 @@
 # types 
 type Shortner {
-  id: ID!
-  alias: String!
-  destinationUrl: String!
-  shortUrl: String!
+  id: ID
+  alias: String
+  destinationUrl: String
+  shortUrl: String
   expirationDate: String
 }
 
@@ -15,7 +15,10 @@ input CreateShortnerInput {
 }
 
 input UpdateShortnerInput {
-  id: Int!
+  id: ID!
+  alias: String!
+  destinationUrl: String!
+  expirationDate: String
 }
 
 # query
@@ -26,4 +29,5 @@ type Query {
 # mutation
 type Mutation {
   createShortUrl(cs: CreateShortnerInput!): Shortner!
+  updateShortUrl(cs: UpdateShortnerInput!): Shortner!
 }

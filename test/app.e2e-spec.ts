@@ -198,6 +198,8 @@ describe("AppController (e2e)", () => {
   });
 
   describe("url shortner", () => {
+    let shortUrlId: string;
+
     it("should create short url", async () => {
       const query = `
       mutation urlShort($input: CreateShortnerInput!) {
@@ -224,10 +226,38 @@ describe("AppController (e2e)", () => {
           query,
           variables,
         })
-        .set("Authorization", `accessToken=${accessTokens.defaultUser}`)
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
 
       expect(status).toBe(200);
       expect(body.data.createShortUrl).toHaveProperty("id");
+      shortUrlId = body.data.createShortUrl.id;
+    });
+
+    it("should update short url", async () => {
+      const query = `
+      mutation urlShort($input: UpdateShortnerInput!) {
+        updateShortUrl(cs: $input) {
+          alias
+          id
+        }
+      }
+      `;
+      const variables = {
+        input: {
+          alias: "testName",
+          destinationUrl: "https://hi.com/hello",
+          id: shortUrlId,
+        },
+      };
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query, variables })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.updateShortUrl).toHaveProperty("id");
+      expect(body.data.updateShortUrl).toHaveProperty("alias");
+      expect(body.data.updateShortUrl.alias).toBe("testName");
     });
   });
 });

@@ -4,6 +4,7 @@ import { randomBytes } from "crypto";
 import mongoose, { Model } from "mongoose";
 import { ShortUrl } from "../../models/shorturl.model";
 import { CreateShortnerInput } from "./dto/create-shortner.input";
+import { UpdateShortnerInput } from "./dto/update-shortner.input";
 
 @Injectable()
 export class ShortnerService {
@@ -42,5 +43,20 @@ export class ShortnerService {
     });
 
     return su;
+  }
+
+  public async updateShortUrl(cs: UpdateShortnerInput) {
+    const urlExists = await this.shortUrlModel.findOne({ _id: cs.id });
+    if (!urlExists) return {};
+
+    const id = cs.id;
+    delete cs.id;
+
+    const updateUrl = await this.shortUrlModel.findOneAndUpdate(
+      { _id: id },
+      { $set: cs },
+      { returnOriginal: false },
+    );
+    return updateUrl;
   }
 }
