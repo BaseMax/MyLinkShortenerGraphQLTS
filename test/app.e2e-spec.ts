@@ -259,5 +259,26 @@ describe("AppController (e2e)", () => {
       expect(body.data.updateShortUrl).toHaveProperty("alias");
       expect(body.data.updateShortUrl.alias).toBe("testName");
     });
+
+    it("should delete short url", async () => {
+      const query = `
+      mutation shortUr {
+        deleteUrl(shortUrlId: "${shortUrlId}") {
+          id
+          deleted
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+
+      expect(status).toBe(200);
+      expect(body.data.deleteUrl).toHaveProperty("id");
+      expect(body.data.deleteUrl).toHaveProperty("deleted");
+      expect(body.data.deleteUrl.deleted).toBeTruthy();
+    });
   });
 });

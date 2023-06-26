@@ -7,6 +7,11 @@ type Shortner {
   expirationDate: String
 }
 
+type DeleteUrlRes {
+  id: ID!
+  deleted: Boolean!
+}
+
 # inputs
 input CreateShortnerInput {
   alias: String!
@@ -30,4 +35,5 @@ type Query {
 type Mutation {
   createShortUrl(cs: CreateShortnerInput!): Shortner!
   updateShortUrl(cs: UpdateShortnerInput!): Shortner!
+  deleteUrl(shortUrlId: ID!): DeleteUrlRes!
 }

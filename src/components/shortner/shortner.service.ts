@@ -59,4 +59,12 @@ export class ShortnerService {
     );
     return updateUrl;
   }
+
+  public async deleteUrl(sui: string) {
+    const { deletedCount } = await this.shortUrlModel.deleteOne({ _id: sui });
+    return {
+      id: sui,
+      deleted: deletedCount >= 1 ? true : false,
+    };
+  }
 }

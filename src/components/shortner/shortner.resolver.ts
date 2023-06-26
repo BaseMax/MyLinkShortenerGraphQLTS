@@ -21,4 +21,9 @@ export class ShortnerResolver {
   public async updateShortUrl(@Args("cs") cs: UpdateShortnerInput) {
     return await this.shortnerService.updateShortUrl(cs);
   }
+
+  @Mutation("deleteUrl")
+  public async deleteUrl(@Args("shortUrlId") sui: string) {
+    return await this.shortnerService.deleteUrl(sui);
+  }
 }
