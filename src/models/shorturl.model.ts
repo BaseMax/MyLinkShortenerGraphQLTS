@@ -40,10 +40,21 @@ class ShortUrl {
     required: false,
     default: null,
   })
-  expirationDate: string;
+  expirationDate: Date;
 }
 
 const shortUrlSchema = SchemaFactory.createForClass(ShortUrl);
+
+shortUrlSchema.pre("save", function () {
+  const time1 = new Date();
+  if (this.expirationDate) {
+    const diffInMs = Math.abs((this.expirationDate as any) - (time1 as any));
+
+    const diffInSec = Math.floor(diffInMs / 1000);
+
+    shortUrlSchema.index({ createdAt: 1 }, { expireAfterSeconds: diffInSec });
+  }
+});
 
 export default shortUrlSchema;
 export { ShortUrlDocument, ShortUrl };

@@ -1,0 +1,29 @@
+# types 
+type Shortner {
+  id: ID!
+  alias: String!
+  destinationUrl: String!
+  shortUrl: String!
+  expirationDate: String
+}
+
+# inputs
+input CreateShortnerInput {
+  alias: String!
+  destinationUrl: String!
+  expirationDate: String
+}
+
+input UpdateShortnerInput {
+  id: Int!
+}
+
+# query
+type Query {
+  _null: String!
+}
+
+# mutation
+type Mutation {
+  createShortUrl(cs: CreateShortnerInput!): Shortner!
+}
