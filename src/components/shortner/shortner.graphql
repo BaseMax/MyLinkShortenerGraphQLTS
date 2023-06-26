@@ -17,6 +17,7 @@ input CreateShortnerInput {
   alias: String!
   destinationUrl: String!
   expirationDate: String
+  shortUrl: String
 }
 
 input UpdateShortnerInput {

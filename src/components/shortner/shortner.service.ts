@@ -28,17 +28,17 @@ export class ShortnerService {
     });
     if (urlExists) return urlExists;
 
-    const baseUrl = cs.destinationUrl.match(/^(https?:\/\/[^\/]+)/)[1];
-
-    const randomString = this.generateRandomBytes();
-
-    const shortUrl = baseUrl.concat("/", randomString);
+    if (!cs.shortUrl) {
+      const baseUrl = cs.destinationUrl.match(/^(https?:\/\/[^\/]+)/)[1];
+      const randomString = this.generateRandomBytes();
+      cs.shortUrl = baseUrl.concat("/", randomString);
+    }
 
     const su = await this.shortUrlModel.create({
       alias: cs.alias,
       destinationUrl: cs.destinationUrl,
       expirationDate: cs.expirationDate ? cs.expirationDate : null,
-      shortUrl,
+      shortUrl: cs.shortUrl,
       userId: this.generateMongoId(cs.userId),
     });
 
