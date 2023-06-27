@@ -31,4 +31,12 @@ export class ShortnerResolver {
   public async generateQRcode(@Args("linkId") linkId: string) {
     return await this.shortnerService.generateQRcode(linkId);
   }
+
+  @Mutation("toggleLinkActivation")
+  public async toggleLinkActivation(
+    @Args("linkId") linkId: string,
+    @Args("activate") activate: boolean,
+  ) {
+    return await this.shortnerService.toggleLinkActivation(linkId, activate);
+  }
 }

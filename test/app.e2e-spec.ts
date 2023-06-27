@@ -302,6 +302,44 @@ describe("AppController (e2e)", () => {
       expect(typeof body.data.generateQRcode.QRcodeUrl).toBe("string");
     });
 
+    it("should activate short url", async () => {
+      const query = `
+      mutation url {
+        toggleLinkActivation(linkId: "${shortUrlId}", activate: true) {
+          id
+          isactive
+        }
+      }`;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.toggleLinkActivation).toHaveProperty("id");
+      expect(body.data.toggleLinkActivation).toHaveProperty("isactive");
+      expect(body.data.toggleLinkActivation.isactive).toBeTruthy();
+    });
+
+    it("should dectivate short url", async () => {
+      const query = `
+      mutation url {
+        toggleLinkActivation(linkId: "${shortUrlId}", activate: false) {
+          id
+          isactive
+        }
+      }`;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.toggleLinkActivation).toHaveProperty("id");
+      expect(body.data.toggleLinkActivation).toHaveProperty("isactive");
+      expect(body.data.toggleLinkActivation.isactive).toBeFalsy();
+    });
+
     it("should delete short url", async () => {
       const query = `
       mutation shortUr {

@@ -5,6 +5,7 @@ type Shortner {
   destinationUrl: String
   shortUrl: String
   expirationDate: String
+  isactive: Boolean
 }
 
 type DeleteUrlRes {
@@ -43,4 +44,5 @@ type Mutation {
   updateShortUrl(cs: UpdateShortnerInput!): Shortner!
   deleteUrl(shortUrlId: ID!): DeleteUrlRes!
   generateQRcode(linkId: ID!): GenerateQRcodeRes!
+  toggleLinkActivation(linkId: ID!, activate: Boolean!): Shortner!
 }

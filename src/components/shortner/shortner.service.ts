@@ -104,4 +104,13 @@ export class ShortnerService {
       QRcodeUrl: si.QRcodePath,
     };
   }
+
+  public async toggleLinkActivation(id: string, isactive: boolean) {
+    const story = await this.shortUrlModel.findOneAndUpdate(
+      { _id: id },
+      { $set: { isactive } },
+      { returnOriginal: false },
+    );
+    return story;
+  }
 }
