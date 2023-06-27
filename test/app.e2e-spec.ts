@@ -304,4 +304,51 @@ describe("AppController (e2e)", () => {
       expect(body.data.deleteUrl.deleted).toBeTruthy();
     });
   });
+
+  describe("user", () => {
+    it("should update user data", async () => {
+      const query = `
+      mutation user($input: UpdateUserInput!) {
+        updateProfile(user: $input) {
+          id
+          name
+        }
+      }
+      `;
+      const variables = {
+        input: {
+          name: "new name",
+          avatar: "avatar",
+        },
+      };
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query, variables })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.updateProfile).toHaveProperty("id");
+      expect(body.data.updateProfile).toHaveProperty("name");
+      expect(body.data.updateProfile.name).toBe("new name");
+    });
+
+    it("should return user data", async () => {
+      const query = `
+      query user {
+        user {
+          id
+          name
+          avatar
+        }
+      }
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.user).toHaveProperty("id");
+      expect(body.data.user).toHaveProperty("name");
+      expect(body.data.user).toHaveProperty("avatar");
+    });
+  });
 });
