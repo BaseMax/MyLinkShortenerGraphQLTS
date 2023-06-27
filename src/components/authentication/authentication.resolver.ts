@@ -1,4 +1,5 @@
-import { Args, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
+import User, { Iuser } from "../../decorator/user.decorator";
 import { AuthenticationService } from "./authentication.service";
 import { LoginInput } from "./dto/login.input";
 import { RegisterInput } from "./dto/register.input";
@@ -26,5 +27,10 @@ export class AuthenticationResolver {
   @Mutation("resetPassword")
   public async resetPassword(@Args("rp") rp: ResetPasswordInput) {
     return await this.authenticationService.resetPassword(rp);
+  }
+
+  @Query("deleteAccount")
+  public async deleteAccount(@User() { id }: Iuser) {
+    return await this.authenticationService.deleteAccount(id);
   }
 }

@@ -5,6 +5,11 @@ type ForgotPasswordRes {
    sendTo: String
 }
 
+type DeleteAccountRes {
+  deleted: Boolean!
+  id: ID!
+}
+
 type Authentication {
   user: newUser
   accessToken: String
@@ -45,7 +50,7 @@ input ResetPasswordInput {
 }
 # query
 type Query {
-  _null: String!
+  deleteAccount: DeleteAccountRes!
 }
 
 type Mutation {

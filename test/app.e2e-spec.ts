@@ -86,6 +86,9 @@ describe("AppController (e2e)", () => {
       name: "authUser",
       avatar: "avatar",
     };
+
+    let authUserAccessToken: string;
+
     it("should register successfuly", async () => {
       const mutation = `
       mutation auth($input: registerInput!) {
@@ -143,6 +146,7 @@ describe("AppController (e2e)", () => {
       expect(body.data.login).toHaveProperty("accessToken");
       expect(body.data.login).toHaveProperty("accepted");
       expect(body.data.login.accepted).toBeTruthy();
+      authUserAccessToken = body.data.login.accessToken;
     });
 
     it("should send email for password reset", async () => {
@@ -193,7 +197,26 @@ describe("AppController (e2e)", () => {
       expect(body.data.resetPassword.accepted).toBeTruthy();
       expect(body.data.resetPassword).toHaveProperty("changed");
       expect(body.data.resetPassword.changed).toBeTruthy();
-      await userModel.deleteOne({ email: authUser.email });
+    });
+
+    it("should delete user", async () => {
+      const query = `
+      query auth {
+        deleteAccount {
+          id
+          deleted
+        }
+      }
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${authUserAccessToken}`);
+
+      expect(status).toBe(200);
+      expect(body.data.deleteAccount).toHaveProperty("id");
+      expect(body.data.deleteAccount).toHaveProperty("deleted");
+      expect(body.data.deleteAccount.deleted).toBeTruthy();
     });
   });
 

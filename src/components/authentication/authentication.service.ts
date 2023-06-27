@@ -130,4 +130,13 @@ export class AuthenticationService {
       message: "your password changed",
     };
   }
+
+  public async deleteAccount(userId: string) {
+    const { deletedCount } = await this.userModel.deleteOne({ _id: userId });
+
+    return {
+      id: userId,
+      deleted: deletedCount >= 1 ? true : false,
+    };
+  }
 }
