@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Args } from "@nestjs/graphql";
+import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import User, { Iuser } from "../../decorator/user.decorator";
 import { CreateShortnerInput } from "./dto/create-shortner.input";
 import { UpdateShortnerInput } from "./dto/update-shortner.input";
@@ -38,5 +38,15 @@ export class ShortnerResolver {
     @Args("activate") activate: boolean,
   ) {
     return await this.shortnerService.toggleLinkActivation(linkId, activate);
+  }
+
+  @Query("getAllLinks")
+  public async getAllLinks(
+    @Args("limit") limit: number,
+    @Args("page") page: number,
+  ) {
+    console.log("dv");
+    
+    return await this.shortnerService.getAllLinks(limit, page);
   }
 }

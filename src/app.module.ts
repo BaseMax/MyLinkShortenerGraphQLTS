@@ -16,9 +16,6 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "public"),
-    }),
     MongooseModule.forRoot(process.env.MONGO_URL),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -32,6 +29,9 @@ import { ServeStaticModule } from "@nestjs/serve-static";
         } as any;
         return graphQLFormattedError;
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "public"),
     }),
     AuthenticationModule,
     ShortnerModule,

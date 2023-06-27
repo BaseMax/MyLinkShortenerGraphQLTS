@@ -340,6 +340,24 @@ describe("AppController (e2e)", () => {
       expect(body.data.toggleLinkActivation.isactive).toBeFalsy();
     });
 
+    it("should return all short links", async () => {
+      const query = `
+      query url {
+        getAllLinks(limit: 2, page: 1) {
+          id
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(Array.isArray(body.data.getAllLinks)).toBe(true);
+      expect(body.data.getAllLinks[0]).toHaveProperty("id");
+    });
+
     it("should delete short url", async () => {
       const query = `
       mutation shortUr {

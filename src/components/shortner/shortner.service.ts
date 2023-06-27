@@ -113,4 +113,14 @@ export class ShortnerService {
     );
     return story;
   }
+
+  public async getAllLinks(limit: number, page: number) {
+    const shortUrls = await this.shortUrlModel
+      .find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+      console.log(shortUrls);
+      
+    return shortUrls;
+  }
 }

@@ -35,7 +35,7 @@ input UpdateShortnerInput {
 
 # query
 type Query {
-  _null: String!
+  getAllLinks(limit: Int!, page: Int!): [Shortner]!
 }
 
 # mutation
