@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { config } from "dotenv";
 
 config({
@@ -12,9 +12,13 @@ import { GraphQLError, GraphQLFormattedError } from "graphql";
 import { AuthenticationModule } from "./components/authentication/authentication.module";
 import { ShortnerModule } from "./components/shortner/shortner.module";
 import { UserModule } from "./components/user/user.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "public"),
+    }),
     MongooseModule.forRoot(process.env.MONGO_URL),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

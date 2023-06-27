@@ -283,6 +283,25 @@ describe("AppController (e2e)", () => {
       expect(body.data.updateShortUrl.alias).toBe("testName");
     });
 
+    it("should create QR code to url", async () => {
+      const query = `
+      mutation url {
+        generateQRcode(linkId: "${shortUrlId}") {
+          id
+          QRcodeUrl
+        }
+      }`;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.generateQRcode).toHaveProperty("id");
+      expect(body.data.generateQRcode).toHaveProperty("QRcodeUrl");
+      expect(typeof body.data.generateQRcode.QRcodeUrl).toBe("string");
+    });
+
     it("should delete short url", async () => {
       const query = `
       mutation shortUr {

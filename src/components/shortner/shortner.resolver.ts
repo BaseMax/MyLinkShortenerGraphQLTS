@@ -26,4 +26,9 @@ export class ShortnerResolver {
   public async deleteUrl(@Args("shortUrlId") sui: string) {
     return await this.shortnerService.deleteUrl(sui);
   }
+
+  @Mutation("generateQRcode")
+  public async generateQRcode(@Args("linkId") linkId: string) {
+    return await this.shortnerService.generateQRcode(linkId);
+  }
 }

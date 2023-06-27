@@ -12,6 +12,11 @@ type DeleteUrlRes {
   deleted: Boolean!
 }
 
+type GenerateQRcodeRes {
+  id: ID!
+  QRcodeUrl: String!
+}
+
 # inputs
 input CreateShortnerInput {
   alias: String!
@@ -37,4 +42,5 @@ type Mutation {
   createShortUrl(cs: CreateShortnerInput!): Shortner!
   updateShortUrl(cs: UpdateShortnerInput!): Shortner!
   deleteUrl(shortUrlId: ID!): DeleteUrlRes!
+  generateQRcode(linkId: ID!): GenerateQRcodeRes!
 }
