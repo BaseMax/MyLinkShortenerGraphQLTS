@@ -119,8 +119,24 @@ export class ShortnerService {
       .find()
       .skip((page - 1) * limit)
       .limit(limit);
-      console.log(shortUrls);
-      
     return shortUrls;
+  }
+
+  public async getLink(id: string) {
+    const shortUrl = await this.shortUrlModel.findOne({ _id: id });
+    return shortUrl;
+  }
+
+  public async getLinkbyShortenedURL(shortUrl: string) {
+    const url = await this.shortUrlModel.findOne({ shortUrl });
+    return url;
+  }
+
+  public async getMyLinks(userId: string, limit: number, page: number) {
+    const myUrl = await this.shortUrlModel
+      .find({ userId: this.generateMongoId(userId) })
+      .skip((page - 1) * limit)
+      .limit(limit);
+    return myUrl;
   }
 }

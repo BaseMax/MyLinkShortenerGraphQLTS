@@ -222,6 +222,7 @@ describe("AppController (e2e)", () => {
 
   describe("url shortner", () => {
     let shortUrlId: string;
+    let shortUrl: string;
 
     it("should create short url", async () => {
       const query = `
@@ -356,6 +357,65 @@ describe("AppController (e2e)", () => {
       expect(status).toBe(200);
       expect(Array.isArray(body.data.getAllLinks)).toBe(true);
       expect(body.data.getAllLinks[0]).toHaveProperty("id");
+    });
+
+    it("should return one short url with id", async () => {
+      const query = `
+      query url {
+        getLink(id: "${shortUrlId}") {
+          id
+          alias
+          shortUrl
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.getLink).toHaveProperty("id");
+      expect(body.data.getLink).toHaveProperty("alias");
+      shortUrl = body.data.getLink.shortUrl;
+    });
+
+    it("should return one short url with short url", async () => {
+      const query = `
+      query url {
+        getLinkbyShortenedURL(url: "${shortUrl}") {
+          id
+          alias
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.getLinkbyShortenedURL).toHaveProperty("id");
+      expect(body.data.getLinkbyShortenedURL).toHaveProperty("alias");
+    });
+
+    it("should return my urls", async () => {
+      const query = `
+      query url {
+        getMyLinks(limit: 10, page: 1) {
+          id
+          alias
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.getMyLinks[0]).toHaveProperty("id");
+      expect(body.data.getMyLinks[0]).toHaveProperty("alias");
     });
 
     it("should delete short url", async () => {

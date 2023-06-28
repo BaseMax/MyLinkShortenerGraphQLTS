@@ -45,8 +45,25 @@ export class ShortnerResolver {
     @Args("limit") limit: number,
     @Args("page") page: number,
   ) {
-    console.log("dv");
-    
     return await this.shortnerService.getAllLinks(limit, page);
+  }
+
+  @Query("getLink")
+  public async getLink(@Args("id") id: string) {
+    return await this.shortnerService.getLink(id);
+  }
+
+  @Query("getLinkbyShortenedURL")
+  public async getLinkbyShortenedURL(@Args("url") url: string) {
+    return await this.shortnerService.getLinkbyShortenedURL(url);
+  }
+
+  @Query("getMyLinks")
+  public async getMyLinks(
+    @Args("limit") limit: number,
+    @Args("page") page: number,
+    @User() { id }: Iuser,
+  ) {
+    return await this.shortnerService.getMyLinks(id, limit, page);
   }
 }
