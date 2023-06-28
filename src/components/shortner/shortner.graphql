@@ -1,0 +1,40 @@
+# types 
+type Shortner {
+  id: ID
+  alias: String
+  destinationUrl: String
+  shortUrl: String
+  expirationDate: String
+}
+
+type DeleteUrlRes {
+  id: ID!
+  deleted: Boolean!
+}
+
+# inputs
+input CreateShortnerInput {
+  alias: String!
+  destinationUrl: String!
+  expirationDate: String
+  shortUrl: String
+}
+
+input UpdateShortnerInput {
+  id: ID!
+  alias: String!
+  destinationUrl: String!
+  expirationDate: String
+}
+
+# query
+type Query {
+  _null: String!
+}
+
+# mutation
+type Mutation {
+  createShortUrl(cs: CreateShortnerInput!): Shortner!
+  updateShortUrl(cs: UpdateShortnerInput!): Shortner!
+  deleteUrl(shortUrlId: ID!): DeleteUrlRes!
+}

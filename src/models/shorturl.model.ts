@@ -40,7 +40,7 @@ class ShortUrl {
     required: false,
     default: null,
   })
-  expirationDate: string;
+  expirationDate: Date;
 }
 
 const shortUrlSchema = SchemaFactory.createForClass(ShortUrl);

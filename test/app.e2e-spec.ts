@@ -3,6 +3,7 @@ import { INestApplication } from "@nestjs/common";
 import * as request from "supertest";
 import { AppModule } from "./../src/app.module";
 import { connect, Model, model, Schema } from "mongoose";
+import { hashSync } from "bcrypt";
 
 describe("AppController (e2e)", () => {
   const defaultUser = {
@@ -22,14 +23,51 @@ describe("AppController (e2e)", () => {
   let userModel: Model<any>;
   let expirecodeModel: Model<any>;
 
+  const generateUser = async () => {
+    const newPass = hashSync(defaultUser.password, 8);
+    await userModel.create({
+      email: defaultUser.email,
+      password: newPass,
+      name: defaultUser.name,
+      avatar: defaultUser.avatar,
+    });
+  };
+
   beforeAll(async () => {
     await connect("mongodb://127.0.0.1:27017/urlshortner");
 
     userModel = model("users", new Schema({}, { strict: false }));
     expirecodeModel = model("expirecodes", new Schema({}, { strict: false }));
+
+    await generateUser();
   });
 
-  beforeEach(async () => {
+  const loginDefaultUser = async () => {
+    const mutation = `
+    mutation auth($input: loginInput!) {
+      login(ri: $input) {
+       accessToken
+       accepted
+       user {
+          id
+        }
+      }
+    }
+    `;
+    const input = {
+      input: {
+        email: defaultUser.email,
+        password: defaultUser.password,
+      },
+    };
+
+    const { body } = await request(app.getHttpServer())
+      .post("/graphql")
+      .send({ query: mutation, variables: input });
+    accessTokens.defaultUser = body.data.login.accessToken;
+  };
+
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -37,6 +75,8 @@ describe("AppController (e2e)", () => {
     app = moduleFixture.createNestApplication();
 
     await app.init();
+
+    await loginDefaultUser();
   });
 
   describe("authentication", () => {
@@ -154,6 +194,91 @@ describe("AppController (e2e)", () => {
       expect(body.data.resetPassword).toHaveProperty("changed");
       expect(body.data.resetPassword.changed).toBeTruthy();
       await userModel.deleteOne({ email: authUser.email });
+    });
+  });
+
+  describe("url shortner", () => {
+    let shortUrlId: string;
+
+    it("should create short url", async () => {
+      const query = `
+      mutation urlShort($input: CreateShortnerInput!) {
+        createShortUrl(cs: $input) {
+          alias
+          id
+          destinationUrl
+          expirationDate
+          shortUrl
+        }
+      }
+      `;
+
+      const variables = {
+        input: {
+          alias: "name",
+          destinationUrl: "https://mongxodb.com/nkvnd",
+        },
+      };
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({
+          query,
+          variables,
+        })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+
+      expect(status).toBe(200);
+      expect(body.data.createShortUrl).toHaveProperty("id");
+      shortUrlId = body.data.createShortUrl.id;
+    });
+
+    it("should update short url", async () => {
+      const query = `
+      mutation urlShort($input: UpdateShortnerInput!) {
+        updateShortUrl(cs: $input) {
+          alias
+          id
+        }
+      }
+      `;
+      const variables = {
+        input: {
+          alias: "testName",
+          destinationUrl: "https://hi.com/hello",
+          id: shortUrlId,
+        },
+      };
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query, variables })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.updateShortUrl).toHaveProperty("id");
+      expect(body.data.updateShortUrl).toHaveProperty("alias");
+      expect(body.data.updateShortUrl.alias).toBe("testName");
+    });
+
+    it("should delete short url", async () => {
+      const query = `
+      mutation shortUr {
+        deleteUrl(shortUrlId: "${shortUrlId}") {
+          id
+          deleted
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+
+      expect(status).toBe(200);
+      expect(body.data.deleteUrl).toHaveProperty("id");
+      expect(body.data.deleteUrl).toHaveProperty("deleted");
+      expect(body.data.deleteUrl.deleted).toBeTruthy();
     });
   });
 });
