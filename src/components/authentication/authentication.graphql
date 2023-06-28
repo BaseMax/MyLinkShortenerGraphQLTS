@@ -1,0 +1,56 @@
+# types
+type ForgotPasswordRes {
+   message: String!
+   accepted: Boolean!
+   sendTo: String
+}
+
+type Authentication {
+  user: newUser
+  accessToken: String
+  message: String!
+  accepted: Boolean!
+}
+
+type newUser {
+  id: ID!
+  email: String!
+  name: String!
+  avatar: String!
+  createdAt: String!
+}
+
+type ResetPasswordRes {
+  changed: Boolean!
+  accepted: Boolean!
+  message: String!
+}
+
+# inputs
+input registerInput {
+  email: String!
+  password: String!
+  name: String!
+  avatar: String!
+}
+
+input loginInput {
+  email: String!
+  password: String!
+}
+
+input ResetPasswordInput {
+  code: Int!
+  password: String!
+}
+# query
+type Query {
+  _null: String!
+}
+
+type Mutation {
+  register(ri: registerInput!): Authentication!
+  login(ri: loginInput!): Authentication!
+  forgotPassword(email: String!): ForgotPasswordRes!
+  resetPassword(rp: ResetPasswordInput): ResetPasswordRes!
+}
