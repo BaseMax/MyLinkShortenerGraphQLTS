@@ -22,6 +22,7 @@ describe("AppController (e2e)", () => {
   // models
   let userModel: Model<any>;
   let expirecodeModel: Model<any>;
+  let shorturlsModel: Model<any>;
 
   const generateUser = async () => {
     const newPass = hashSync(defaultUser.password, 8);
@@ -38,6 +39,7 @@ describe("AppController (e2e)", () => {
 
     userModel = model("users", new Schema({}, { strict: false }));
     expirecodeModel = model("expirecodes", new Schema({}, { strict: false }));
+    shorturlsModel = model("shorturls", new Schema({}, { strict: false }));
 
     await generateUser();
   });
@@ -284,6 +286,50 @@ describe("AppController (e2e)", () => {
       expect(body.data.updateShortUrl.alias).toBe("testName");
     });
 
+    it("should track link", async () => {
+      const query = `
+      mutation url($input: TrackLinkInput!) {
+        trackLink(tr: $input) {
+          id
+          linkId
+        }
+      }
+      `;
+      const variables = {
+        input: {
+          linkId: shortUrlId,
+          referrer: "test0",
+          userAgent: "test1",
+          ipAddress: "test2",
+        },
+      };
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query, variables });
+
+      expect(status).toBe(200);
+      expect(body.data.trackLink).toHaveProperty("id");
+      expect(body.data.trackLink).toHaveProperty("linkId");
+    });
+
+    it("should return visit link - i mean tracked links", async () => {
+      const query = `
+      query url {
+        getLinkVisits(linkId: "${shortUrlId}") {
+          id
+          linkId
+        }
+      }
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+      expect(status).toBe(200);
+      expect(body.data.getLinkVisits[0]).toHaveProperty("id");
+      expect(body.data.getLinkVisits[0]).toHaveProperty("linkId");
+    });
+
     it("should create QR code to url", async () => {
       const query = `
       mutation url {
@@ -301,6 +347,31 @@ describe("AppController (e2e)", () => {
       expect(body.data.generateQRcode).toHaveProperty("id");
       expect(body.data.generateQRcode).toHaveProperty("QRcodeUrl");
       expect(typeof body.data.generateQRcode.QRcodeUrl).toBe("string");
+    });
+
+    it("should return popular links", async () => {
+      for (let i = 0; i < 10; i++) {
+        await shorturlsModel.create({
+          view: i,
+          alias: "mahdi",
+          destinationUrl: "http://localhost:3000/sssss",
+        });
+      }
+      const query = `
+      query ss {
+        getPopularLinks(limit: 10) {
+          id
+          view
+        }
+      }
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+      expect(status).toBe(200);
+      expect(body.data.getPopularLinks[0]).toHaveProperty("id");
+      expect(body.data.getPopularLinks[1]).toHaveProperty("view");
+      expect(Array.isArray(body.data.getPopularLinks)).toBeTruthy();
     });
 
     it("should activate short url", async () => {

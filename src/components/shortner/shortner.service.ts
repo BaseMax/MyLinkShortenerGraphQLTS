@@ -8,11 +8,14 @@ import { UpdateShortnerInput } from "./dto/update-shortner.input";
 import { toFile } from "qrcode";
 import { resolve } from "path";
 import { existsSync, mkdirSync } from "fs";
+import { TrackLinkInput } from "./dto/trackLinkInput.input";
+import { Visit } from "../../models/visit.model";
 
 @Injectable()
 export class ShortnerService {
   constructor(
     @InjectModel(ShortUrl.name) private readonly shortUrlModel: Model<ShortUrl>,
+    @InjectModel(Visit.name) private readonly visitModel: Model<Visit>,
   ) {
     this.createPublicFolder();
   }
@@ -123,7 +126,11 @@ export class ShortnerService {
   }
 
   public async getLink(id: string) {
-    const shortUrl = await this.shortUrlModel.findOne({ _id: id });
+    const shortUrl = await this.shortUrlModel.findOneAndUpdate(
+      { _id: id },
+      { $inc: { view: 1 } },
+      { returnOriginal: false },
+    );
     return shortUrl;
   }
 
@@ -138,5 +145,23 @@ export class ShortnerService {
       .skip((page - 1) * limit)
       .limit(limit);
     return myUrl;
+  }
+
+  public async trackLink(tr: TrackLinkInput) {
+    return await this.visitModel.create(tr);
+  }
+
+  public async getPopularLinks(limit: number) {
+    const urls = await this.shortUrlModel
+      .find({})
+      .sort({ view: -1 })
+      .limit(limit);
+    return urls;
+  }
+
+  public async getLinkVisits(linkId: string | any) {
+    linkId = this.generateMongoId(linkId);
+    const vists = await this.visitModel.find({ linkId });
+    return vists;
   }
 }

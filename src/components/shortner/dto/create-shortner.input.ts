@@ -1,5 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsString, IsUrl } from "class-validator";
+import { IsString } from "class-validator";
 
 @InputType()
 export class CreateShortnerInput {
@@ -8,7 +8,6 @@ export class CreateShortnerInput {
   alias: string;
 
   @Field()
-  @IsUrl()
   destinationUrl: string;
 
   @Field()

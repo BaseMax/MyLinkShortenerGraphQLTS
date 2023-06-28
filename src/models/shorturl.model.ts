@@ -55,6 +55,13 @@ class ShortUrl {
     default: true,
   })
   isactive: string;
+
+  @Prop({
+    type: Number,
+    required: false,
+    default: 0,
+  })
+  view: number;
 }
 
 const shortUrlSchema = SchemaFactory.createForClass(ShortUrl);
