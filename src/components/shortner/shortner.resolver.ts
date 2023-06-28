@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Args, Query } from "@nestjs/graphql";
 import User, { Iuser } from "../../decorator/user.decorator";
 import { CreateShortnerInput } from "./dto/create-shortner.input";
+import { TrackLinkInput } from "./dto/trackLinkInput.input";
 import { UpdateShortnerInput } from "./dto/update-shortner.input";
 import { ShortnerService } from "./shortner.service";
 
@@ -40,13 +41,45 @@ export class ShortnerResolver {
     return await this.shortnerService.toggleLinkActivation(linkId, activate);
   }
 
+  @Mutation("trackLink")
+  public async trackLink(@Args("tr") tr: TrackLinkInput) {
+    return await this.shortnerService.trackLink(tr);
+  }
+
   @Query("getAllLinks")
   public async getAllLinks(
     @Args("limit") limit: number,
     @Args("page") page: number,
   ) {
-    console.log("dv");
-    
     return await this.shortnerService.getAllLinks(limit, page);
+  }
+
+  @Query("getLink")
+  public async getLink(@Args("id") id: string) {
+    return await this.shortnerService.getLink(id);
+  }
+
+  @Query("getLinkbyShortenedURL")
+  public async getLinkbyShortenedURL(@Args("url") url: string) {
+    return await this.shortnerService.getLinkbyShortenedURL(url);
+  }
+
+  @Query("getMyLinks")
+  public async getMyLinks(
+    @Args("limit") limit: number,
+    @Args("page") page: number,
+    @User() { id }: Iuser,
+  ) {
+    return await this.shortnerService.getMyLinks(id, limit, page);
+  }
+
+  @Query("getPopularLinks")
+  public async getPopularLinks(@Args("limit") limit: number) {
+    return await this.shortnerService.getPopularLinks(limit);
+  }
+
+  @Query("getLinkVisits")
+  public async getLinkVisits(@Args("linkId") linkId: string) {
+    return await this.shortnerService.getLinkVisits(linkId);
   }
 }

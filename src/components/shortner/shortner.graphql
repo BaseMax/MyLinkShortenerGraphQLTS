@@ -6,6 +6,17 @@ type Shortner {
   shortUrl: String
   expirationDate: String
   isactive: Boolean
+  view: Int
+}
+
+type VisistDetails {
+  id: ID!
+  linkId: String!
+  referrer: String!
+  userAgent: String!
+  ipAddress: String!
+  createdAt: String!
+  updatedAt: String!
 }
 
 type DeleteUrlRes {
@@ -33,9 +44,20 @@ input UpdateShortnerInput {
   expirationDate: String
 }
 
+input TrackLinkInput {
+  linkId: ID!
+  referrer: String!
+  userAgent: String!
+  ipAddress: String!
+}
 # query
 type Query {
   getAllLinks(limit: Int!, page: Int!): [Shortner]!
+  getLink(id: ID!): Shortner
+  getLinkbyShortenedURL(url: String!): Shortner
+  getMyLinks(limit: Int!, page: Int!):  [Shortner]!
+  getPopularLinks(limit: Int!):  [Shortner]!
+  getLinkVisits(linkId: ID!):  [VisistDetails]!
 }
 
 # mutation
@@ -45,4 +67,5 @@ type Mutation {
   deleteUrl(shortUrlId: ID!): DeleteUrlRes!
   generateQRcode(linkId: ID!): GenerateQRcodeRes!
   toggleLinkActivation(linkId: ID!, activate: Boolean!): Shortner!
+  trackLink(tr: TrackLinkInput!): VisistDetails!
 }
