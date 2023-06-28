@@ -1,4 +1,4 @@
-import { resolve } from "path";
+import { join, resolve } from "path";
 import { config } from "dotenv";
 
 config({
@@ -11,6 +11,8 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { GraphQLError, GraphQLFormattedError } from "graphql";
 import { AuthenticationModule } from "./components/authentication/authentication.module";
 import { ShortnerModule } from "./components/shortner/shortner.module";
+import { UserModule } from "./components/user/user.module";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   imports: [
@@ -28,8 +30,12 @@ import { ShortnerModule } from "./components/shortner/shortner.module";
         return graphQLFormattedError;
       },
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "public"),
+    }),
     AuthenticationModule,
     ShortnerModule,
+    UserModule,
   ],
 })
 export class AppModule {}

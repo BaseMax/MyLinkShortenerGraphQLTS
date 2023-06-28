@@ -1,0 +1,24 @@
+# type
+type User {
+  id: ID!
+  name: String
+  email: String
+  avatar: String
+}
+
+# input 
+input UpdateUserInput {
+  name: String
+  email: String
+  avatar: String
+}
+
+# query
+
+type Query {
+  user: User!
+}
+# mutation
+type Mutation {
+  updateProfile(user: UpdateUserInput!): User!
+}

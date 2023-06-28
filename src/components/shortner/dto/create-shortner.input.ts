@@ -10,8 +10,8 @@ export class CreateShortnerInput {
   @Field()
   @IsUrl()
   destinationUrl: string;
+
   @Field()
-  @IsUrl()
   shortUrl?: string;
 
   @Field()

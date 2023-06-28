@@ -86,6 +86,9 @@ describe("AppController (e2e)", () => {
       name: "authUser",
       avatar: "avatar",
     };
+
+    let authUserAccessToken: string;
+
     it("should register successfuly", async () => {
       const mutation = `
       mutation auth($input: registerInput!) {
@@ -143,6 +146,7 @@ describe("AppController (e2e)", () => {
       expect(body.data.login).toHaveProperty("accessToken");
       expect(body.data.login).toHaveProperty("accepted");
       expect(body.data.login.accepted).toBeTruthy();
+      authUserAccessToken = body.data.login.accessToken;
     });
 
     it("should send email for password reset", async () => {
@@ -193,7 +197,26 @@ describe("AppController (e2e)", () => {
       expect(body.data.resetPassword.accepted).toBeTruthy();
       expect(body.data.resetPassword).toHaveProperty("changed");
       expect(body.data.resetPassword.changed).toBeTruthy();
-      await userModel.deleteOne({ email: authUser.email });
+    });
+
+    it("should delete user", async () => {
+      const query = `
+      query auth {
+        deleteAccount {
+          id
+          deleted
+        }
+      }
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${authUserAccessToken}`);
+
+      expect(status).toBe(200);
+      expect(body.data.deleteAccount).toHaveProperty("id");
+      expect(body.data.deleteAccount).toHaveProperty("deleted");
+      expect(body.data.deleteAccount.deleted).toBeTruthy();
     });
   });
 
@@ -260,6 +283,81 @@ describe("AppController (e2e)", () => {
       expect(body.data.updateShortUrl.alias).toBe("testName");
     });
 
+    it("should create QR code to url", async () => {
+      const query = `
+      mutation url {
+        generateQRcode(linkId: "${shortUrlId}") {
+          id
+          QRcodeUrl
+        }
+      }`;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.generateQRcode).toHaveProperty("id");
+      expect(body.data.generateQRcode).toHaveProperty("QRcodeUrl");
+      expect(typeof body.data.generateQRcode.QRcodeUrl).toBe("string");
+    });
+
+    it("should activate short url", async () => {
+      const query = `
+      mutation url {
+        toggleLinkActivation(linkId: "${shortUrlId}", activate: true) {
+          id
+          isactive
+        }
+      }`;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.toggleLinkActivation).toHaveProperty("id");
+      expect(body.data.toggleLinkActivation).toHaveProperty("isactive");
+      expect(body.data.toggleLinkActivation.isactive).toBeTruthy();
+    });
+
+    it("should dectivate short url", async () => {
+      const query = `
+      mutation url {
+        toggleLinkActivation(linkId: "${shortUrlId}", activate: false) {
+          id
+          isactive
+        }
+      }`;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(body.data.toggleLinkActivation).toHaveProperty("id");
+      expect(body.data.toggleLinkActivation).toHaveProperty("isactive");
+      expect(body.data.toggleLinkActivation.isactive).toBeFalsy();
+    });
+
+    it("should return all short links", async () => {
+      const query = `
+      query url {
+        getAllLinks(limit: 2, page: 1) {
+          id
+        }
+      }
+      `;
+
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query });
+
+      expect(status).toBe(200);
+      expect(Array.isArray(body.data.getAllLinks)).toBe(true);
+      expect(body.data.getAllLinks[0]).toHaveProperty("id");
+    });
+
     it("should delete short url", async () => {
       const query = `
       mutation shortUr {
@@ -279,6 +377,53 @@ describe("AppController (e2e)", () => {
       expect(body.data.deleteUrl).toHaveProperty("id");
       expect(body.data.deleteUrl).toHaveProperty("deleted");
       expect(body.data.deleteUrl.deleted).toBeTruthy();
+    });
+  });
+
+  describe("user", () => {
+    it("should update user data", async () => {
+      const query = `
+      mutation user($input: UpdateUserInput!) {
+        updateProfile(user: $input) {
+          id
+          name
+        }
+      }
+      `;
+      const variables = {
+        input: {
+          name: "new name",
+          avatar: "avatar",
+        },
+      };
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query, variables })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.updateProfile).toHaveProperty("id");
+      expect(body.data.updateProfile).toHaveProperty("name");
+      expect(body.data.updateProfile.name).toBe("new name");
+    });
+
+    it("should return user data", async () => {
+      const query = `
+      query user {
+        user {
+          id
+          name
+          avatar
+        }
+      }
+      `;
+      const { status, body } = await request(app.getHttpServer())
+        .post("/graphql")
+        .send({ query })
+        .set("Authorization", `accessToken=${accessTokens.defaultUser}`);
+      expect(status).toBe(200);
+      expect(body.data.user).toHaveProperty("id");
+      expect(body.data.user).toHaveProperty("name");
+      expect(body.data.user).toHaveProperty("avatar");
     });
   });
 });

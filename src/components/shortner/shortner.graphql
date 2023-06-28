@@ -5,11 +5,17 @@ type Shortner {
   destinationUrl: String
   shortUrl: String
   expirationDate: String
+  isactive: Boolean
 }
 
 type DeleteUrlRes {
   id: ID!
   deleted: Boolean!
+}
+
+type GenerateQRcodeRes {
+  id: ID!
+  QRcodeUrl: String!
 }
 
 # inputs
@@ -29,7 +35,7 @@ input UpdateShortnerInput {
 
 # query
 type Query {
-  _null: String!
+  getAllLinks(limit: Int!, page: Int!): [Shortner]!
 }
 
 # mutation
@@ -37,4 +43,6 @@ type Mutation {
   createShortUrl(cs: CreateShortnerInput!): Shortner!
   updateShortUrl(cs: UpdateShortnerInput!): Shortner!
   deleteUrl(shortUrlId: ID!): DeleteUrlRes!
+  generateQRcode(linkId: ID!): GenerateQRcodeRes!
+  toggleLinkActivation(linkId: ID!, activate: Boolean!): Shortner!
 }

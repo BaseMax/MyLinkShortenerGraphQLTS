@@ -41,6 +41,20 @@ class ShortUrl {
     default: null,
   })
   expirationDate: Date;
+
+  @Prop({
+    type: String,
+    required: false,
+    default: null,
+  })
+  QRcodePath: string;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: true,
+  })
+  isactive: string;
 }
 
 const shortUrlSchema = SchemaFactory.createForClass(ShortUrl);
