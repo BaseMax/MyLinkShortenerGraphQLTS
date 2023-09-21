@@ -34,7 +34,7 @@
     "dotenv": "^16.3.1",
     "graphql": "^16.8.1",
     "install": "^0.13.0",
-    "mongoose": "^7.3.3",
+    "mongoose": "^7.5.2",
     "nodemailer": "^6.9.3",
     "npm": "^9.7.2",
     "qrcode": "^1.5.3",
