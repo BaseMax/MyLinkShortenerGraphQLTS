@@ -35,7 +35,7 @@
     "graphql": "^16.8.1",
     "install": "^0.13.0",
     "mongoose": "^7.5.2",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^6.9.9",
     "npm": "^9.7.2",
     "qrcode": "^1.5.3",
     "reflect-metadata": "^0.1.13",
